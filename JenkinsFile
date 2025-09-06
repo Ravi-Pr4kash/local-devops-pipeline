@@ -1,0 +1,42 @@
+pipeline {
+    agent any  // runs on any available Jenkins agent
+
+    environment {
+        // Define environment variables if needed
+        GIT_REPO = 'https://github.com/Ravi-Pr4kash/local-devops-pipeline'
+        BRANCH = 'main'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                // Pull code from GitHub
+                git branch: "${BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Build Project') {
+            steps {
+                script {
+                    // If Java project using Maven
+                    sh 'mvn clean install'
+
+                    // If Node.js project instead, use:
+                    // sh 'npm install'
+                    // sh 'npm run build'
+                }
+            }
+        }
+
+    }
+
+    post {
+        success {
+            echo 'Build completed successfully!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
+    }
+}
